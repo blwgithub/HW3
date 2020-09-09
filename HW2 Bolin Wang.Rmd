@@ -1,0 +1,78 @@
+---
+title: "Hw2 Bolin Wang"
+author: "Bolin Wang"
+date: "2020/9/2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# 1.import data from github
+```{r}
+Hw1<- read.csv("https://github.com/kijohnson/ADA-FAll-2020/raw/master/Class%20One/Class%201%20Survey%20Fall%202020.csv")
+```
+
+# 2.number of observation(32) and variables(27)
+
+```{r}
+dim(Hw1)
+```
+
+# 3a.rename column names
+
+```{r}
+names(Hw1)[2:27]<-c("like_cat","like_dog","iitem","slogan","day_of_week","time","fFood","fDrink","fMonth","hobby","program","speciallization","Ssofware","Rexp","Cconfort","level","Cexp","LinC","PHintres","Fnumber","bday","bmonth","country","state","city","edulevel")
+
+```
+
+# 4.count the number of different virable type
+```{r}
+table(sapply(Hw1, class))
+```
+
+# 5a. find unusual variable
+```{r}
+Hw1$bday%in%(1:31)
+Hw1$bmonth%in%(1:12)
+```
+
+# 5b.replace word to number and calculate median
+```{r}
+library(plyr)
+Hw1[which(Hw1$bday=='26-Mar')]$bday<-"26"
+median(subset(Hw1$bday,Hw1$bday%in%(1:31)))
+
+Hw1$bmonth<-as.numeric(Hw1$bmonth)
+
+Hw1[which(Hw1$bmonth=='december')]$bmonth<-"12"
+Hw1[which(Hw1$bmonth=='August')]$bmonth<-"8"
+median(subset(Hw1$bmonth,Hw1$bmonth%in%(1:12)))
+```
+# 6a new bseason variable
+```{r}
+Hw1$bseason[Hw1$bmonth%in%c(1,2,12)]<-"winter"
+Hw1$bseason[Hw1$bmonth%in%c(3,4,5)]<-"spring"
+Hw1$bseason[Hw1$bmonth%in%c(6,7,8)]<-"summer"
+Hw1$bseason[Hw1$bmonth%in%c(9,10,11)]<-"fall"
+```
+
+# 6b season,bmonth table
+```{r}
+table(Hw1$bmonth,Hw1$bseason)
+```
+
+#6c addmargins to count sum of bseason. 
+# spring=8, summer=7, fall=8, winter=7)
+```{r}
+addmargins(table(Hw1$bmonth,Hw1$bseason)) 
+```
+# 7 How many students are in dfferent education level? 
+```{r}
+library(plyr)
+count(Hw1$edulevel)
+```
+## sum the numer of students' education degree by using count function#
+
